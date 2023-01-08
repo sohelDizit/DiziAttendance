@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono&subset=greek,cyrillic"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="/static/assets/css/custom.css"/>
+        <script src="/static/assets/js/custom.js"></script>
+    </head>
+<body>
+
+
+<div class="root_container">
+    <div class="header">
+        <h2 class="txt_center">Member and Guest Management System</h2>
+    </div>
+ 
+    <img aria-colcount="img" src="/static/assets/images/bg-images/cardPunch.png" class="mem_img" />
+    <h3 class="txt_center">Please Punch Your Card</h2>
+
+<style>
+    h3.txt_center {
+        color: green;
+    }
+</style>
+
+
+
+<script type="text/javascript">
+    let url = `ws://${window.location.host}/ws/socket-server/`
+    // let url = `ws://127.0.0.1:8077/ws/socket-server/`
+
+    const chatSocket = new WebSocket(url)
+    // window.location.href = "/member/37/";
+    chatSocket.onmessage = function(e)
+    {
+        let data = JSON.parse(e.data)
+        console.log('Data:', data)
+
+        if(data.type === 'chat')
+        {
+            window.location.href = data.message;
+        }
+        else if(data.type === 'redirect')
+        {
+            window.location.href = data.message;
+            // let messages = document.getElementById('messages')
+            // messages.insertAdjacentHTML('beforeend', `<div>
+            //                         <p>${data.message}</p>
+            //                     </div>`)
+        }
+    }
+
+    // let form = document.getElementById('form')
+    // form.addEventListener('submit', (e)=> {
+    //     e.preventDefault()
+    //     let message = e.target.message.value 
+    
+    //     chatSocket.send(JSON.stringify({
+    //         'message':message
+    //     }))
+    //     form.reset()
+    // })
+
+</script>
+
+
+
+</div>
+</body>
+</html>
+

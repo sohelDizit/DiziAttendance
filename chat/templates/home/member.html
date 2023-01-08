@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono&subset=greek,cyrillic"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="/static/assets/css/custom.css"/>
+        <script src="/static/assets/js/custom.js"></script>
+    </head>
+<body>
+
+
+<div class="root_container">
+    <div class="header">
+        <a class="homeImg_a" href="/">
+            <img class="homeImg" src="/static/assets/images/bg-images/home.png"/>
+        </a>     
+        <h2 class="txt_center"> Member and Guest Management System</h2>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="contin_main">
+            <div class=" contin">
+                <div class="image_dv">
+                    <img aria-colcount="img" src="{{person.Image.url}}" class="mem_img" />
+                </div>        
+            </div>    
+            <div class="contin">
+                <div class="infra">
+                    <div class="info_lbl">Name:</div>
+                    <div class="info">{{person.Name}}</div>
+                </div>
+                <div class="infra">
+                    <div class="info_lbl">Membership Number:</div>
+                    <div class="info">{{person.MemberNumber}}</div>
+                </div>
+                <div class="infra">
+                    <div class="info_lbl">Category:</div>
+                    <div class="info">{{ categorys }}</div>
+                </div>
+                <div class="infra">
+                    <div class="info_lbl">Organisation:</div>
+                    <div class="info">{{person.organisation}}</div>
+                </div>
+                <div class="infra">
+                    <div class="info_lbl">Start Date:</div>
+                    <div class="info">{{person.StartDate}}</div>
+                </div>
+                <div class="infra">
+                    <div class="info_lbl">Number of Guest In:</div>
+                    <div class="info"><input min="0" minlength="1" maxlength="1" maxvalue="{{allow_guest_no}}" value="0" name="numberofGust" id="numberofGust" type="number"/></div>
+                </div>
+                <div class="infra">
+                <button type="button" id="add_guest">Add Guest</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="Guest_details">
+            <!-- <h2 class="txt_center"> Guest Details</h2> -->
+            <div class="contin_root">           
+                <table >
+                    <tr>
+                        <th>Date</th>
+                        <th>Guest Name/Card Number</th>
+                        <th>Exit Time</th>
+                        <th>ID Checked</th>
+                        
+                    </tr>
+                    <tbody id="existing">  
+                        {% for ex in existing_guest %}
+                            <tr  class="{% if ex.ExitTime %}gestexited {% else %} notexist {% endif %}">
+                                <td>{{ ex.EntryTime|date:'M d Y H:i'  }}</td>
+                                <td>{{ ex.Name }}</td>
+                                <td>{{ ex.ExitTime|date:'M d Y H:i'  }}</td>
+                                <td>
+                                    {% if ex.IdChecked %}
+                                        <img class="check" src="/static/assets/images/bg-images/checkbox_checked.png"/>                                       
+                                    {% else %}
+                                        <img class="uncheck" src="/static/assets/images/bg-images/unchecked_checkbox.png"/>
+                                    {% endif %}
+                                    
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tbody id="tblgust"></tbody>
+                </table>
+            </div>
+            <button id="save_gust">Save</button>
+
+        </div>
+
+    </form>
+
+<style>
+</style>
+<!-- <input id="chat-message-input" type="text" size="100"><br>
+<input id="chat-message-submit" type="button" value="Send"> -->
+
+<!-- 
+<script type="text/javascript">
+    let url = `ws://${window.location.host}/ws/socket-server/`
+
+    const chatSocket = new WebSocket(url)
+
+    chatSocket.onmessage = function(e)
+    {
+        let data = JSON.parse(e.data)
+        console.log('Data:', data)
+
+        if(data.type === 'chat'){
+            let messages = document.getElementById('messages')
+
+            messages.insertAdjacentHTML('beforeend', `<div>
+                                    <p>${data.message}</p>
+                                </div>`)
+        }
+    }
+
+
+</script> -->
+
+
+
+</div>
+</body>
+</html>
+

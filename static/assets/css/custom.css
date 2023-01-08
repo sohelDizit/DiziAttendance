@@ -1,0 +1,171 @@
+
+        .txt_center
+        {
+            text-align: center;
+        }
+        .contin {
+            display: inline-block;
+            width: 48%;
+            float: left;
+        }
+        img.mem_img {
+            width: 100%;
+        }
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-family: 'Roboto ', serif;
+
+        }
+        .root_container {
+            width: 80%;
+            margin: 0px;
+            margin: 0 auto;
+            /* background-color: #eeeeeead; */
+            padding: 0px;
+        }
+        .infra {
+            margin-left: 4%;
+        }
+        .info, .info_lbl {
+            display: inline-flex;
+        }
+        .info_lbl {
+            margin-right: 10px;
+        }
+        .infra {
+            font-size: 25px;
+            font-weight: 700;
+            padding-bottom: 15px;
+        }
+        .image_dv {
+            display: block;
+            width: 100%;
+        }
+        img.mem_img {
+            width: initial;
+            margin: auto;
+            display: block;
+            max-height: 350px;
+        }
+        tbody#existing tr td {
+            color: black;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        tr.gestexited {
+            background-color: green !important;
+        }
+        .gestexited td {
+            color: white !important;
+        }
+        tr.gestexited {
+            border: 1px solid #eee;
+            background-color: green;
+        }
+        .header {
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+        img.homeImg {
+            width: 2%;
+            padding-right: 10px;
+        }
+        a.homeImg_a {
+            text-decoration: none;
+        }
+        h2.txt_center, img.homeImg {
+            display: inline-block;
+        }
+        .info input[type="number"] {
+            width: 54px;
+            height: 50px;
+            font-size: 20px;
+            font-weight: 800;
+            border: 2px solid #afa1a1;
+            border-radius: 5px;
+            text-align: center;
+        }
+        button#add_guest,button#save_gust {
+            width: 60%;
+            height: 50px;
+            display: block;
+            /* border: 1px solid #cfc9c9; */
+            font-size: 20px;
+            font-weight: bold;
+        }
+        button#save_gust {
+            margin: 20px auto;
+            width: 20%;
+            color: green;
+        }
+        .contin_main {
+            width: 100%;
+            min-height: 400px;
+            border: 1.5px solid #eee;
+            padding: 5px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+                        rgba(0, 0, 0, 0.12) 0px -12px 30px,
+                        rgba(0, 0, 0, 0.12) 0px 4px 6px,
+                        rgba(0, 0, 0, 0.17) 0px 12px 13px,
+                        rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        }
+
+        .Guest_details {
+            margin-top: 30px;
+            width: 100%;
+            min-height: 200px;
+            margin-bottom: 50px;
+            padding: 10px;
+            border-radius: 10px;
+            display: block;
+            box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, 
+                        rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+        }
+
+        .Guest_details .txt_center {
+            padding: 0;
+            margin: 0;
+        }
+
+        .contin_root {
+            width: 95%;
+            margin: auto;
+        }
+        img.uncheck {
+            width: 20px;
+        }
+        img.check {
+            width: 24px;
+        }
+        td.tdname input {
+            width: 90%;
+            height: 30px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: block;
+            margin: auto;
+        }
+
+        
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
+    
+        td, th {
+        /* border: 1px solid #dddddd; */
+        text-align: left;
+        padding: 8px;
+        text-align: center;
+        }
+    
+        tr:nth-child(even) {
+        background-color: #dddddd;
+        }

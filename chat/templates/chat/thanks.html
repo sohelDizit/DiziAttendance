@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono&subset=greek,cyrillic"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="/static/assets/css/custom.css"/>
+        <script src="/static/assets/js/custom.js"></script>
+    </head>
+<body>
+
+
+<div class="root_container">
+    <div class="header">
+        <a class="homeImg_a" href="/">
+            <img class="homeImg" src="/static/assets/images/bg-images/home.png"/>
+        </a>     
+        <h2 class="txt_center"> Member and Guest Management System</h2>
+    </div>
+
+    <h1>Thanks {{entry.Customer.Name}}</h1>
+    <h3>Start Time <span class="entry">{{entry.EntryTime}}</span></h3>
+    <h3>End Time <span class="exit">{{entry.ExitTime}}</span></h3>
+
+<style>
+
+h1,h3 {
+    text-align: center;
+}
+span.entry {
+    color: green;
+}
+span.exit {
+    color: red;
+}
+</style>
+
+</div>
+</body>
+</html>
+

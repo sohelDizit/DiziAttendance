@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Lexic Portal - Signin</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="author" content="CodedThemes" />
+    
+    {% load static %}
+
+    <link rel="icon" href="{% static 'assets/images/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'assets/fonts/fontawesome/css/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/animation/css/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/layouts/dark.css' %}">
+
+</head>
+
+<body>
+    <div class="auth-wrapper aut-bg-img" 
+    style="background-image: url('{% static 'assets/images/bg-images/bg3.jpg' %}');">
+        <div class="auth-content">
+            <div class="text-white">
+                <div class="card-body text-center">
+                    
+                    <form action="{% url 'login' %}" method="post" id="login-form">
+                     {% csrf_token %}
+                    <div class="mb-4">
+                        <i class="feather icon-user-plus auth-icon"></i>
+                    </div>
+
+                    <h3 class="mb-4">Sign up</h3>
+                    <div class="input-group mb-3">
+                        <input type="text" placeholder="User Name"  class="form-control" name="username" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username">
+                    </div>
+
+                    <div class="input-group mb-4">
+                        <input type="password" class="form-control" placeholder="password" name="password" autocomplete="current-password" required="" id="id_password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary shadow-2 mb-4">Log in</button>
+                    </form>    
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Required Js -->
+    <script src="{% static 'assets/js/vendor-all.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/pcoded.min.js' %}"></script>
+
+</body>
+</html>

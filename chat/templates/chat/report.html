@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono&subset=greek,cyrillic"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="/static/assets/css/custom.css"/>
+        <script src="/static/assets/js/custom.js"></script>
+    </head>
+<body>
+
+
+<div class="root_container">
+    <div class="header">
+        <a class="homeImg_a" href="/">
+            <img class="homeImg" src="/static/assets/images/bg-images/home.png"/>
+            <h2 class="txt_center">Member and Guest Management System</h2>
+        </a>     
+        
+    </div>
+
+    <div class="search_bar">
+        <form method="post" class="waraper">
+            {% csrf_token %}
+            <div class="contin">
+                Date Start: <input name="date_start" value="{{stat_time}}" type="date"/>
+            </div>
+            <div class="contin">
+                Date End: <input name="date_end" value="{{end_time}}" type="date"/>
+            </div>   
+            <div class="contin">
+                Membership: <input name="membership" value="{{membership}}" type="number"/>
+            </div>    
+            <div class="contin contin_btn">
+                <button type="submit">Submit</button>
+            </div>              
+        </form>
+        
+    </div>
+    <table>
+        <tr>
+          <th>Date</th>
+          <th>Guest Name</th>
+          <th>Member</th>
+          <th>Entry</th>
+          <th>Exit</th>
+          <th>ID Checked</th>
+        </tr>
+
+        
+            {% for item in entrys %}       
+                <tr>
+                    <td>{{item.EntryTime.date}}</td>
+                    <td>{{ item.Customer.Name}}</td>
+                    <td><a class="member"  href="/admin/chat/person/{{ item.Customer.id}}/change/">{{ item.Customer.Name}}</a></td>   
+                    <td>{{item.EntryTime.time}}</td>     
+                    <td>{{item.ExitTime.time}}</td>               
+                </tr>
+                {% for guest in item.GuestEntrys.all %}
+                    <tr>
+                        <td>{{guest.EntryTime.date}}</td>
+                        <td>{{ guest.Name}}</td>
+                        <td><a class="member" href="/admin/chat/person/{{ item.Customer.id}}/change/">{{ item.Customer.Name}}</a></td>   
+                        <td>{{guest.EntryTime.time}}</td>     
+                        <td>{{guest.ExitTime.time}}</td>    
+                        <td>{{guest.IdChecked}}</td>              
+                    </tr>
+                {% endfor %} 
+            {% endfor %}       
+      </table>
+      
+
+
+
+<style>
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.contin {
+    display: inline-block;
+    width: 30%;
+    font-size: 20px;
+    float: none;
+}
+
+input[type="date"],input[type="number"] {
+    width: 60%;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #877d7d;
+    }
+
+    .search_bar {
+    margin-bottom: 15px;
+}
+a.member {
+    color: green;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.contin.contin_btn {
+    width: 8%;
+    height: 30px;
+}
+</style>
+
+</div>
+</body>
+</html>
+
