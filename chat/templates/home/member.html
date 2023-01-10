@@ -43,35 +43,37 @@
                 </div>
                 <div class="infra">
                     <div class="info_lbl">Start Date:</div>
-                    <div class="info">{{person.StartDate}}</div>
+                    <div class="info">{{person.StartDate|date:'M d Y '}}</div>
                 </div>
+
                 <div class="infra">
                     <div class="info_lbl">Number of Guest In:</div>
-                    <div class="info"><input min="0" minlength="1" maxlength="1" maxvalue="{{allow_guest_no}}" value="0" name="numberofGust" id="numberofGust" type="number"/></div>
+                    <div class="info"><input min="0" minlength="1" maxlength="1" maxvalue="{{allow_guest_no}}" value="{{allow_guest_no}}" name="numberofGust" id="numberofGust" type="number"/></div>
                 </div>
+
                 <div class="infra">
-                <button type="button" id="add_guest">Add Guest</button>
+                    <button type="button" id="add_guest">Add Guest</button>
                 </div>
             </div>
         </div>
 
 
         <div class="Guest_details">
-            <!-- <h2 class="txt_center"> Guest Details</h2> -->
             <div class="contin_root">           
                 <table >
                     <tr>
                         <th>Date</th>
-                        <th>Guest Name/Card Number</th>
+                        <th>Name</th>
+                        <th>Card Number</th>
                         <th>Exit Time</th>
                         <th>ID Checked</th>
-                        
                     </tr>
                     <tbody id="existing">  
-                        {% for ex in existing_guest %}
+                        {% for ex in existing_guest.all %}
                             <tr  class="{% if ex.ExitTime %}gestexited {% else %} notexist {% endif %}">
                                 <td>{{ ex.EntryTime|date:'M d Y H:i'  }}</td>
                                 <td>{{ ex.Name }}</td>
+                                <td>{{ ex.CardNumber }}</td>
                                 <td>{{ ex.ExitTime|date:'M d Y H:i'  }}</td>
                                 <td>
                                     {% if ex.IdChecked %}
@@ -95,34 +97,125 @@
 
 <style>
 </style>
-<!-- <input id="chat-message-input" type="text" size="100"><br>
-<input id="chat-message-submit" type="button" value="Send"> -->
 
-<!-- 
+
+
+
+
+
+
+
+
 <script type="text/javascript">
+$(document).ready(function()
+ {
+
+    var currentnumber = 0;
+    var maxvalue= $("#numberofGust").attr("maxvalue");
     let url = `ws://${window.location.host}/ws/socket-server/`
-
-    const chatSocket = new WebSocket(url)
-
+    const chatSocket = new WebSocket(url);
     chatSocket.onmessage = function(e)
     {
-        let data = JSON.parse(e.data)
+        let data = JSON.parse(e.data);
         console.log('Data:', data)
+        if(data.UID)
+        {
+            var currentDate=GetCurrerntDate();
+            $(".Guest_details").show();
+            currentnumber+=1;
+            if(currentnumber>maxvalue)
+            {
+                alert("Max Guest number Exceeded");
+                return;
+            }
 
-        if(data.type === 'chat'){
-            let messages = document.getElementById('messages')
 
-            messages.insertAdjacentHTML('beforeend', `<div>
-                                    <p>${data.message}</p>
-                                </div>`)
+            $("#numberofGust").val((currentnumber));            
+            // html ='<tr> <td class="tddate">'+currentDate+'</td> <td class="tdname"><input id="text'+currentnumber+'" value="'+data.UID+'" name="text'+currentnumber+'" type="text"/></td><td></td>  <td class="tdcheck"><input id="check'+currentnumber+'" name="check'+currentnumber+'" type="checkbox"/></td> </tr>';
+            html ='<tr> <td class="tddate">'+currentDate+'</td> <td class="tdname"><input id="text'+currentnumber+'" class="center" name="text'+currentnumber+'" type="text"/><td class="tdname"><input id="card'+currentnumber+'" class="center" value="'+data.UID+'"  name="card'+currentnumber+'" type="text"/></td><td></td>  <td class="tdcheck"><input id="check'+currentnumber+'" name="check'+currentnumber+'" type="checkbox"/></td> </tr>';
+
+            $('tbody#tblgust').append(html);
+            console.log('uid:', data.UID)
         }
     }
 
 
-</script> -->
 
 
 
+
+
+
+  $("button#add_guest").click(function()
+  {
+    var html='';
+    var currentDate=GetCurrerntDate();
+    var gustNumber= parseInt($("#numberofGust").val());
+    if(gustNumber>0)
+    {
+        $(".Guest_details").show();
+        for (let i = 1; i <= gustNumber; i++) 
+        {
+            html +='<tr> <td class="tddate">'+currentDate+'</td> <td class="tdname"><input id="text'+i+'" class="center" name="text'+i+'" type="text"/><td class="tdname"><input id="card'+i+'" class="center" name="card'+i+'" type="text"/></td><td></td>  <td class="tdcheck"><input id="check'+i+'" name="check'+i+'" type="checkbox"/></td> </tr>';
+        }
+        $('tbody#tblgust').empty();
+        $('tbody#tblgust').append(html);
+    }
+    else
+    {
+        $(".Guest_details").hide();
+    }
+ });
+
+
+$("#numberofGust").blur(function()
+{
+   
+    var currentvalue= parseInt($(this).val());
+    if(isNaN(currentvalue))
+    {
+        $(this).val(1);
+    }
+    else if(maxvalue<currentvalue)
+    {
+        $(this).val(maxvalue);
+    }
+    else if (currentvalue<=0)
+    {
+        $(this).val(1);
+    }
+});
+
+
+function GetCurrerntDate()
+{
+    var d = new Date();
+    const options = { month: "short" };
+
+    var month = new Intl.DateTimeFormat("en-US", options).format(d);
+    var day =(d.getDate()<10 ? '0' : '') + d.getDate();
+    var year= d.getFullYear();
+    var hour= (d.getHours()<10 ? '0' : '') +d.getHours();
+    var mini= (d.getMinutes()<10 ? '0' : '') +d.getMinutes();
+    var sec= (d.getSeconds()<10 ? '0' : '') +d.getSeconds();
+    var output =   month+' '+day + ' ' +year+", "+hour + ":" + mini ;
+    return output;
+}
+
+});
+
+
+</script>
+
+<style>
+    input.center {
+        text-align: center;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+
+</style>
 </div>
 </body>
 </html>

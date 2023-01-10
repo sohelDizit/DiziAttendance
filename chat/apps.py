@@ -6,6 +6,7 @@ from asgiref.sync import async_to_sync
 from datetime import datetime
 from django.utils import timezone
 
+
 def LiveCaptureIn(ip,port,timeout,password):
     from .models import Person,CardNumber
     conn = None
@@ -17,14 +18,14 @@ def LiveCaptureIn(ip,port,timeout,password):
         for attendance in conn.live_capture():
             if attendance is None:
                 pass
-            else:
-                
+            else:                
                 card_obj=CardNumber.objects.filter(CardNumber=attendance.user_id)[:1]          
                 if card_obj:
                     person=card_obj[0].Person
-                    layer = get_channel_layer()
-                    async_to_sync(layer.group_send)('test', {"type": "chat_message", "message": "/member/"+str(person.id)})              
+                    async_to_sync(layer.group_send)('test', {"type": "chat_message",'UID':attendance.user_id, "Redirect": "/member/"+str(person.id)})              
                     print ('+LiveCaptureIn UID  #{}'.format(attendance.user_id))
+                else:
+                    async_to_sync(layer.group_send)('test', {"type": "chat_message",'UID':attendance.user_id})              
 
     except Exception as e:
         print ("Process terminate : {}".format(e))
@@ -51,23 +52,29 @@ def LiveCaptureOut(ip,port,timeout,password):
                         personEntry=Entry.objects.filter(Customer=card_obj[0].Person,ExitTime=None).order_by('-EntryTime')
                         if personEntry:
                             personEntry= personEntry[0]
+                            active_guest= personEntry.GuestEntrys.filter(ExitTime=None)
+                            if active_guest:
+                                async_to_sync(layer.group_send)('test', {"type": "chat_message", "message": ("You have %s Guest"%(len(active_guest)))})   
+                                continue; 
+
+
                             personEntry.ExitTime =datetime.now()    
                             personEntry.save()  
                             # print("--------------------------------------")       
                             # print(personEntry.ExitTime,personEntry)
                             # print(personEntry)
-                            async_to_sync(layer.group_send)('test', {"type": "chat_message", "message": "/thanks/"+str(personEntry.id)})    
+                            async_to_sync(layer.group_send)('test', {"type": "chat_message", "Redirect": "/thanks/"+str(personEntry.id)})    
                             # async_to_sync(layer.group_send)('test', {"type": "chat_message", "message": "/member/"+str(personEntry.id)})                     
                             print ('+ UID LiveCaptureOut #{}'.format(attendance.user_id))
                     else:
-                        guests= GuestEntry.objects.filter(Name=attendance.user_id,ExitTime=None)
+                        guests= GuestEntry.objects.filter(CardNumber=attendance.user_id,ExitTime=None)
                         if guests:
                             for guest in guests:
                                 guest.ExitTime=datetime.now(tz=timezone.utc)
                                 guest.save()
-                                entry= Entry.objects.filter(GuestEntrys__Name=attendance.user_id).order_by('-id')[:1]
+                                entry= Entry.objects.filter(GuestEntrys__CardNumber=attendance.user_id).order_by('-id')[:1]
                                 if entry:
-                                    async_to_sync(layer.group_send)('test', {"type": "chat_message", "message": "/member/"+str(entry[0].Customer.id)})
+                                    async_to_sync(layer.group_send)('test', {"type": "chat_message", "Redirect": "/member/"+str(entry[0].Customer.id)})
             except Exception as e:
                 print ("Process terminate : {}".format(e))
 

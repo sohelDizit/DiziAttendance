@@ -27,39 +27,22 @@
 
 <script type="text/javascript">
     let url = `ws://${window.location.host}/ws/socket-server/`
-    // let url = `ws://127.0.0.1:8077/ws/socket-server/`
-
     const chatSocket = new WebSocket(url)
-    // window.location.href = "/member/37/";
     chatSocket.onmessage = function(e)
     {
         let data = JSON.parse(e.data)
         console.log('Data:', data)
-
-        if(data.type === 'chat')
+        if(data.Redirect)
         {
-            window.location.href = data.message;
+            window.location.href = data.Redirect;
         }
-        else if(data.type === 'redirect')
+        else if(data.message)
         {
-            window.location.href = data.message;
-            // let messages = document.getElementById('messages')
-            // messages.insertAdjacentHTML('beforeend', `<div>
-            //                         <p>${data.message}</p>
-            //                     </div>`)
-        }
+            alert(data.message);
+        }     
     }
 
-    // let form = document.getElementById('form')
-    // form.addEventListener('submit', (e)=> {
-    //     e.preventDefault()
-    //     let message = e.target.message.value 
-    
-    //     chatSocket.send(JSON.stringify({
-    //         'message':message
-    //     }))
-    //     form.reset()
-    // })
+
 
 </script>
 

@@ -12,7 +12,7 @@ urlpatterns = [
     path('report/', views.Reporting.as_view()),
     path('member/<int:pk>/', views.Member.as_view()),
     path('', views.Dashboard.as_view()),
-    # path('SayHello/',views.SayHello),
+    path('GeneratePdf/',views.GeneratePdf.as_view()),
     # path('LiveCapture/',views.LiveCapture),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/',LogoutView.as_view(

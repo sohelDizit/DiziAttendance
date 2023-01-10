@@ -15,20 +15,45 @@ class ChatConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-        print("receive")
+        message=None
+        UID=None
+        Redirect=None
+
+        if 'message' in text_data_json:
+            message = text_data_json['message']
+
+        if 'UID' in text_data_json:
+            UID= text_data_json['UID']
+
+        if 'Redirect' in text_data_json:
+            Redirect= text_data_json['Redirect']
+
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type':'chat_message',
-                'message':message
+                'message':message,
+                'UID':UID,
+                'Redirect':Redirect
             }
         )
 
     def chat_message(self, event):
-        message = event['message']
-        print(message)
+        message=None
+        UID=None
+        Redirect=None
+        if 'message' in event:
+            message = event['message']
+
+        if 'UID' in event:
+            UID= event['UID']
+
+        if 'Redirect' in event:
+            Redirect= event['Redirect']
+
         self.send(text_data=json.dumps({
             'type':'chat',
-            'message':message
+            'message':message,
+            'UID':UID,
+            'Redirect':Redirect
         }))

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>Reporting</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono&subset=greek,cyrillic"/>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <link rel="stylesheet" href="/static/assets/css/custom.css"/>
@@ -22,13 +23,26 @@
         <form method="post" class="waraper">
             {% csrf_token %}
             <div class="contin">
-                Date Start: <input name="date_start" value="{{stat_time}}" type="date"/>
+                <div class="nameContainer">Date Start: </div>
+                <div class="inputContainer"><input name="date_start" value="{{stat_time}}" type="date"/></div>                
             </div>
             <div class="contin">
-                Date End: <input name="date_end" value="{{end_time}}" type="date"/>
+                <div class="nameContainer">Date End:  </div>
+                <div class="inputContainer"><input name="date_end" value="{{end_time}}" type="date"/></div> 
             </div>   
             <div class="contin">
-                Membership: <input name="membership" value="{{membership}}" type="number"/>
+                <div class="nameContainer">Membership:  </div>
+                <div class="inputContainer"><input name="membership" value="{{membership}}" type="number"/></div> 
+            </div>  
+            <div class="contin">
+                <div class="nameContainer">Report Type: </div>
+                <div class="inputContainer">
+                    <select name="report_type">
+                        <option value="1">Show in web</option>
+                        <option value="2">Show in PDF</option>
+                        <option value="3">Show in Excell</option>
+                    </select>
+                </div> 
             </div>    
             <div class="contin contin_btn">
                 <button type="submit">Submit</button>
@@ -48,18 +62,18 @@
 
         
             {% for item in entrys %}       
-                <tr>
+                <!-- <tr>
                     <td>{{item.EntryTime.date}}</td>
                     <td>{{ item.Customer.Name}}</td>
                     <td><a class="member"  href="/admin/chat/person/{{ item.Customer.id}}/change/">{{ item.Customer.Name}}</a></td>   
                     <td>{{item.EntryTime.time}}</td>     
                     <td>{{item.ExitTime.time}}</td>               
-                </tr>
+                </tr> -->
                 {% for guest in item.GuestEntrys.all %}
                     <tr>
                         <td>{{guest.EntryTime.date}}</td>
                         <td>{{ guest.Name}}</td>
-                        <td><a class="member" href="/admin/chat/person/{{ item.Customer.id}}/change/">{{ item.Customer.Name}}</a></td>   
+                        <td><a class="member" href="/admin/chat/person/{{ item.Customer.id}}/change/">{{ item.Customer.Name}}({{ item.Customer.MemberNumber}})</a></td>   
                         <td>{{guest.EntryTime.time}}</td>     
                         <td>{{guest.ExitTime.time}}</td>    
                         <td>{{guest.IdChecked}}</td>              
@@ -91,13 +105,35 @@ tr:nth-child(even) {
 
 .contin {
     display: inline-block;
-    width: 30%;
+    width: 45%;
     font-size: 20px;
     float: none;
+    margin-bottom: 20px;
+}
+.inputContainer {
+    width: 63%;
+}
+.nameContainer, .inputContainer {
+    display: inline-block;
+}
+.nameContainer {
+    width: 35%;
+    text-align: right;
 }
 
-input[type="date"],input[type="number"] {
-    width: 60%;
+button {
+    margin: auto;
+    display: block;
+    width: 250px;
+    height: 40px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+
+input[type="date"],input[type="number"],select {
+    width: 100%;
     font-size: 18px;
     text-align: center;
     border-radius: 5px;
@@ -114,8 +150,10 @@ a.member {
 }
 
 .contin.contin_btn {
-    width: 8%;
+    width: 100%;
     height: 30px;
+    display: block;
+    margin: auto;
 }
 </style>
 

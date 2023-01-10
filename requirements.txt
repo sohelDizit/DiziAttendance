@@ -26,3 +26,4 @@ typing_extensions==4.0.1
 tzdata==2021.5
 zope.interface==5.4.0
 pyzk==0.9
+psycopg2==2.9.5

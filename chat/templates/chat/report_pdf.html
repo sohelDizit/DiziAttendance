@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+<body>
+
+
+<div class="root_container">
+    <h2 style="text-align: center;">Member and Guest Management System</h2>
+    <table>
+        <tr class="width:100%">
+          <th>Date</th>
+          <th>Guest Name</th>
+          <th>Member</th>
+          <th>Entry</th>
+          <th>Exit</th>
+          <th>ID Checked</th>
+        </tr>        
+            {% for item in entrys %}       
+                {% for guest in item.GuestEntrys.all %}
+                    <tr style="width:100%">
+                        <td style="width:15%;">{{guest.EntryTime.date}}</td>
+                        <td style="width:25%;">{{ guest.Name}}</td>
+                        <td style="width:25%;"><a class="member" href="/admin/chat/person/{{ item.Customer.id}}/change/">{{ item.Customer.Name}}({{ item.Customer.MemberNumber}})</a></td>   
+                        <td style="width:10%;">{{guest.EntryTime.time}}</td>     
+                        <td style="width:10%;">{{guest.ExitTime.time}}</td>    
+                        <td style="width:15%;">{{guest.IdChecked}}</td>              
+                    </tr>
+                {% endfor %} 
+            {% endfor %}       
+      </table>      
+<style>
+
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+
+    .contin {
+        display: inline-block;
+        width: 30%;
+        font-size: 20px;
+        float: none;
+    }
+
+    input[type="date"],input[type="number"] {
+        width: 60%;
+        font-size: 18px;
+        text-align: center;
+        border-radius: 5px;
+        border: 1px solid #877d7d;
+    }
+
+    .search_bar {
+        margin-bottom: 15px;
+    }
+    a.member {
+        color: green;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .contin.contin_btn {
+        width: 8%;
+        height: 30px;
+    }
+    .root_container,table{
+        width: 100%;
+    }
+</style>
+
+</div>
+</body>
+</html>
+

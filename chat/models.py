@@ -44,6 +44,7 @@ class Person(models.Model):
 
 class GuestEntry(models.Model):
     Name = models.CharField(max_length=200,blank=False, verbose_name = "Name")
+    CardNumber=models.CharField(max_length=200,blank=False, null=True, verbose_name = "Card Number")
     Entry= models.ForeignKey('Entry', on_delete=models.CASCADE,null=False,blank=False)
     EntryTime=models.DateTimeField(blank=False,null=True, verbose_name = "Entry Time")
     IdChecked= models.BooleanField()
