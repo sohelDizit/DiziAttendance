@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono&subset=greek,cyrillic"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/assets/plugins/jquery/js/jquery.min.js"></script>
         <link rel="stylesheet" href="/static/assets/css/custom.css"/>
         <script src="/static/assets/js/custom.js"></script>
+        <title>Member Info</title>
     </head>
 <body>
 
@@ -13,10 +13,11 @@
     <div class="header">
         <a class="homeImg_a" href="/">
             <img class="homeImg" src="/static/assets/images/bg-images/home.png"/>
-        </a>     
-        <h2 class="txt_center"> Member and Guest Management System</h2>
+            <h2 class="txt_center">Member and Guest Management System</h2>
+        </a>             
     </div>
-    <form method="post">
+    
+    <form method="post" onsubmit="return validateForm()">
         {% csrf_token %}
         <div class="contin_main">
             <div class=" contin">
@@ -24,7 +25,7 @@
                     <img aria-colcount="img" src="{{person.Image.url}}" class="mem_img" />
                 </div>        
             </div>    
-            <div class="contin">
+            <div class="contin" style="margin-top: 50px;">
                 <div class="infra">
                     <div class="info_lbl">Name:</div>
                     <div class="info">{{person.Name}}</div>
@@ -48,10 +49,10 @@
 
                 <div class="infra">
                     <div class="info_lbl">Number of Guest In:</div>
-                    <div class="info"><input min="0" minlength="1" maxlength="1" maxvalue="{{allow_guest_no}}" value="{{allow_guest_no}}" name="numberofGust" id="numberofGust" type="number"/></div>
+                    <div class="info"><input min="0" minlength="1" maxlength="1" maxvalue="{{allow_guest_no}}" value="{{allow_guest_no}}" readonly name="numberofGust" id="numberofGust" type="number"/></div>
                 </div>
 
-                <div class="infra">
+                <div style="display: none;" class="infra">
                     <button type="button" id="add_guest">Add Guest</button>
                 </div>
             </div>
@@ -73,7 +74,7 @@
                             <tr  class="{% if ex.ExitTime %}gestexited {% else %} notexist {% endif %}">
                                 <td>{{ ex.EntryTime|date:'M d Y H:i'  }}</td>
                                 <td>{{ ex.Name }}</td>
-                                <td>{{ ex.CardNumber }}</td>
+                                <td class="card">{{ ex.CardNumber }}</td>
                                 <td>{{ ex.ExitTime|date:'M d Y H:i'  }}</td>
                                 <td>
                                     {% if ex.IdChecked %}
@@ -94,117 +95,124 @@
         </div>
 
     </form>
+    <div id="snackbar">Some text some message..</div>
 
 <style>
 </style>
 
 
 
-
-
-
-
-
-
 <script type="text/javascript">
-$(document).ready(function()
- {
-
-    var currentnumber = 0;
-    var maxvalue= $("#numberofGust").attr("maxvalue");
-    let url = `ws://${window.location.host}/ws/socket-server/`
-    const chatSocket = new WebSocket(url);
-    chatSocket.onmessage = function(e)
+    $(document).ready(function()
     {
-        let data = JSON.parse(e.data);
-        console.log('Data:', data)
-        if(data.UID)
+        var currentnumber = 0;
+        var maxvalue= $("#numberofGust").attr("maxvalue");
+        let url = `ws://${window.location.host}/ws/socket-server/`
+        const chatSocket = new WebSocket(url);
+        chatSocket.onmessage = function(e)
         {
-            var currentDate=GetCurrerntDate();
-            $(".Guest_details").show();
-            currentnumber+=1;
-            if(currentnumber>maxvalue)
+            let data = JSON.parse(e.data);
+            if(data.UID)
             {
-                alert("Max Guest number Exceeded");
-                return;
+                var isValid= true;
+                $('input.center.card').each(function()
+                {
+                    if($(this).val()==data.UID)
+                    {
+                        Toast("snackbar","This card already Entered")
+                        isValid=false
+                        return false;
+                    }
+                })
+                $('td.card').each(function()
+                {
+                    if($(this).html()==data.UID)
+                    {
+                        Toast("snackbar","This card already Entered")
+                        isValid=false
+                        return false;
+                    }
+                })
+           
+                if(!isValid){return;}
+                var currentDate=GetCurrerntDate();
+                $(".Guest_details").show();
+                currentnumber+=1;
+                if(currentnumber>maxvalue)
+                {
+                    Toast("snackbar","Max Guest number Exceeded")
+                    return;
+                }
+
+                $("#numberofGust").val((currentnumber));            
+                html ='<tr> <td class="tddate">'+currentDate+'</td> <td class="tdname"><input id="text'+currentnumber+'" required class="center name" name="text'+currentnumber+'" type="text"/><td class="tdname"><input id="card'+currentnumber+'" required class="center card" value="'+data.UID+'" readonly name="card'+currentnumber+'" type="text"/></td><td></td>  <td class="tdcheck"><input id="check'+currentnumber+'" class="checkmark" required name="check'+currentnumber+'" type="checkbox"/></td> </tr>';
+
+                $('tbody#tblgust').append(html);
+                console.log('uid:', data.UID)
             }
-
-
-            $("#numberofGust").val((currentnumber));            
-            // html ='<tr> <td class="tddate">'+currentDate+'</td> <td class="tdname"><input id="text'+currentnumber+'" value="'+data.UID+'" name="text'+currentnumber+'" type="text"/></td><td></td>  <td class="tdcheck"><input id="check'+currentnumber+'" name="check'+currentnumber+'" type="checkbox"/></td> </tr>';
-            html ='<tr> <td class="tddate">'+currentDate+'</td> <td class="tdname"><input id="text'+currentnumber+'" class="center" name="text'+currentnumber+'" type="text"/><td class="tdname"><input id="card'+currentnumber+'" class="center" value="'+data.UID+'"  name="card'+currentnumber+'" type="text"/></td><td></td>  <td class="tdcheck"><input id="check'+currentnumber+'" name="check'+currentnumber+'" type="checkbox"/></td> </tr>';
-
-            $('tbody#tblgust').append(html);
-            console.log('uid:', data.UID)
+            else if(data.OtherMessage)
+            {
+                Toast("snackbar",data.OtherMessage)
+            }
         }
-    }
 
-
-
-
-
-
-
-
-  $("button#add_guest").click(function()
-  {
-    var html='';
-    var currentDate=GetCurrerntDate();
-    var gustNumber= parseInt($("#numberofGust").val());
-    if(gustNumber>0)
+    $("button#add_guest").click(function()
     {
-        $(".Guest_details").show();
-        for (let i = 1; i <= gustNumber; i++) 
+        var html='';
+        var currentDate=GetCurrerntDate();
+        var gustNumber= parseInt($("#numberofGust").val());
+        if(gustNumber>0)
         {
-            html +='<tr> <td class="tddate">'+currentDate+'</td> <td class="tdname"><input id="text'+i+'" class="center" name="text'+i+'" type="text"/><td class="tdname"><input id="card'+i+'" class="center" name="card'+i+'" type="text"/></td><td></td>  <td class="tdcheck"><input id="check'+i+'" name="check'+i+'" type="checkbox"/></td> </tr>';
+            $(".Guest_details").show();
+            for (let i = 1; i <= gustNumber; i++) 
+            {
+                html +='<tr> <td class="tddate">'+currentDate+'</td> <td class="tdname"><input id="text'+i+'" class="center name" name="text'+i+'" type="text"/><td class="tdname"><input id="card'+i+'" class="center card" name="card'+i+'" type="text"/></td><td></td>  <td class="tdcheck"><input id="check'+i+'" name="check'+i+'" type="checkbox"/></td> </tr>';
+            }
+            $('tbody#tblgust').empty();
+            $('tbody#tblgust').append(html);
         }
-        $('tbody#tblgust').empty();
-        $('tbody#tblgust').append(html);
-    }
-    else
+        else
+        {
+            $(".Guest_details").hide();
+        }
+    });
+
+
+    $("#numberofGust").blur(function()
+    {   
+        var currentvalue= parseInt($(this).val());
+        if(isNaN(currentvalue))
+        {
+            $(this).val(1);
+        }
+        else if(maxvalue<currentvalue)
+        {
+            $(this).val(maxvalue);
+        }
+        else if (currentvalue<=0)
+        {
+            $(this).val(1);
+        }
+    });
+
+
+    function GetCurrerntDate()
     {
-        $(".Guest_details").hide();
+        var d = new Date();
+        const options = { month: "short" };
+
+        var month = new Intl.DateTimeFormat("en-US", options).format(d);
+        var day =(d.getDate()<10 ? '0' : '') + d.getDate();
+        var year= d.getFullYear();
+        var hour= (d.getHours()<10 ? '0' : '') +d.getHours();
+        var mini= (d.getMinutes()<10 ? '0' : '') +d.getMinutes();
+        var sec= (d.getSeconds()<10 ? '0' : '') +d.getSeconds();
+        var output =   month+' '+day + ' ' +year+", "+hour + ":" + mini ;
+        return output;
     }
- });
-
-
-$("#numberofGust").blur(function()
-{
    
-    var currentvalue= parseInt($(this).val());
-    if(isNaN(currentvalue))
-    {
-        $(this).val(1);
-    }
-    else if(maxvalue<currentvalue)
-    {
-        $(this).val(maxvalue);
-    }
-    else if (currentvalue<=0)
-    {
-        $(this).val(1);
-    }
-});
-
-
-function GetCurrerntDate()
-{
-    var d = new Date();
-    const options = { month: "short" };
-
-    var month = new Intl.DateTimeFormat("en-US", options).format(d);
-    var day =(d.getDate()<10 ? '0' : '') + d.getDate();
-    var year= d.getFullYear();
-    var hour= (d.getHours()<10 ? '0' : '') +d.getHours();
-    var mini= (d.getMinutes()<10 ? '0' : '') +d.getMinutes();
-    var sec= (d.getSeconds()<10 ? '0' : '') +d.getSeconds();
-    var output =   month+' '+day + ' ' +year+", "+hour + ":" + mini ;
-    return output;
-}
-
-});
-
-
+    
+    });
 </script>
 
 <style>
@@ -213,7 +221,10 @@ function GetCurrerntDate()
         font-size: 15px;
         font-weight: 700;
     }
-
+    input.center.card {
+    border: 0;
+    background-color: transparent;
+}
 
 </style>
 </div>

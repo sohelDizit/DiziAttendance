@@ -2,9 +2,10 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono&subset=greek,cyrillic"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/assets/plugins/jquery/js/jquery.min.js"></script>
         <link rel="stylesheet" href="/static/assets/css/custom.css"/>
         <script src="/static/assets/js/custom.js"></script>
+        <title>Checkout</title>
     </head>
 <body>
 
@@ -13,8 +14,8 @@
     <div class="header">
         <a class="homeImg_a" href="/">
             <img class="homeImg" src="/static/assets/images/bg-images/home.png"/>
-        </a>     
-        <h2 class="txt_center"> Member and Guest Management System</h2>
+            <h2 class="txt_center">Member and Guest Management System</h2>
+        </a>             
     </div>
 
     <h1>Thanks {{entry.Customer.Name}}</h1>
@@ -33,6 +34,40 @@ span.exit {
     color: red;
 }
 </style>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function()
+    {
+        let url = `ws://${window.location.host}/ws/socket-server/`
+        const chatSocket = new WebSocket(url)
+        chatSocket.onmessage = function(e)
+        {
+            let data = JSON.parse(e.data)
+            if(data.OtherMessage)
+            {
+                Toast("snackbar",data.OtherMessage)
+            }
+            else if(data.message)
+            {
+                Toast("snackbar",data.message)
+            }     
+        }
+    });
+
+
+
+
+</script>
+
+
+
+
+
+
+
 
 </div>
 </body>

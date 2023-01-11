@@ -2,9 +2,11 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono&subset=greek,cyrillic"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/assets/plugins/jquery/js/jquery.min.js"></script>
         <link rel="stylesheet" href="/static/assets/css/custom.css"/>
         <script src="/static/assets/js/custom.js"></script>
+        <title>Home</title>
+
     </head>
 <body>
 
@@ -26,27 +28,39 @@
 
 
 <script type="text/javascript">
-    let url = `ws://${window.location.host}/ws/socket-server/`
-    const chatSocket = new WebSocket(url)
-    chatSocket.onmessage = function(e)
+    $(document).ready(function()
     {
-        let data = JSON.parse(e.data)
-        console.log('Data:', data)
-        if(data.Redirect)
+        let url = `ws://${window.location.host}/ws/socket-server/`
+        const chatSocket = new WebSocket(url)
+        chatSocket.onmessage = function(e)
         {
-            window.location.href = data.Redirect;
+            let data = JSON.parse(e.data)
+            console.log('Data:', data)
+
+
+
+            if(data.Redirect)
+            {
+                window.location.href = data.Redirect;
+            }
+            else if(data.OtherMessage)
+            {
+                Toast("snackbar",data.OtherMessage)
+            }
+            else if(data.message)
+            {
+                Toast("snackbar",data.message)
+            }     
         }
-        else if(data.message)
-        {
-            alert(data.message);
-        }     
-    }
+    });
+
 
 
 
 </script>
 
 
+<div id="snackbar">Some text some message..</div>
 
 </div>
 </body>

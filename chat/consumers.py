@@ -18,7 +18,7 @@ class ChatConsumer(WebsocketConsumer):
         message=None
         UID=None
         Redirect=None
-
+        OtherMessage=None
         if 'message' in text_data_json:
             message = text_data_json['message']
 
@@ -28,13 +28,17 @@ class ChatConsumer(WebsocketConsumer):
         if 'Redirect' in text_data_json:
             Redirect= text_data_json['Redirect']
 
+        if 'OtherMessage' in text_data_json:
+            OtherMessage= text_data_json['OtherMessage']
+
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type':'chat_message',
                 'message':message,
                 'UID':UID,
-                'Redirect':Redirect
+                'Redirect':Redirect,
+                'OtherMessage':OtherMessage
             }
         )
 
@@ -42,6 +46,8 @@ class ChatConsumer(WebsocketConsumer):
         message=None
         UID=None
         Redirect=None
+        OtherMessage=None
+
         if 'message' in event:
             message = event['message']
 
@@ -51,9 +57,13 @@ class ChatConsumer(WebsocketConsumer):
         if 'Redirect' in event:
             Redirect= event['Redirect']
 
+        if 'OtherMessage' in event:
+            OtherMessage= event['OtherMessage']
+
         self.send(text_data=json.dumps({
             'type':'chat',
             'message':message,
             'UID':UID,
-            'Redirect':Redirect
+            'Redirect':Redirect,
+            'OtherMessage':OtherMessage
         }))

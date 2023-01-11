@@ -135,6 +135,8 @@ class Member(LoginRequiredMixin,View):
         numberofGust =int(request.POST.get('numberofGust', 0))
         person = Person.objects.get(id=self.kwargs['pk'])
         member_entrys= Entry.objects.filter(Customer=person,ExitTime=None).order_by('-EntryTime')
+        print(member_entrys)
+        print(numberofGust)
         if member_entrys and numberofGust>0:
             member_entrys=member_entrys[0]
             for x in range(1,numberofGust+1):
