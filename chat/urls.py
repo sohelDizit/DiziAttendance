@@ -20,3 +20,8 @@ urlpatterns = [
                     next_page=None),name = 'logout')
 
 ]
+
+
+admin.site.site_header = "Member and Guest Management System"
+admin.site.site_title = "Member and Guest Management System"
+admin.site.index_title = "Member and Guest Management System"

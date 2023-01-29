@@ -1050,3 +1050,53 @@ table#change-history tbody th {
 .popup #header {
     padding: 10px 20px;
 }
+.field-img_preview, .field-Image {
+    display: inline-block;
+    width: 45%;
+}
+
+
+form#person_form .field-Name, form#person_form .field-MemberNumber, form#person_form .field-organisation,form#person_form .field-StartDate {
+    display: inline-block;
+    width: 45%;
+}
+
+form#person_form input.vTextField,input#id_StartDate {
+    width: 95%;
+}
+
+input#id_StartDate {
+    width: 80%;
+}
+
+span.timezonewarning {
+    display: none;
+}
+
+form#person_form .form-row.field-Details, form#person_form .form-row.field-Categorys {
+    /* display: inline-block; */
+    width: 45%;
+    float: left;
+}
+
+form#person_form .related-widget-wrapper,textarea#id_Details,select#id_Categorys  {
+    width: 95%;
+}
+
+.field-Categorys .help,.field-img_preview label, .field-Image label {
+    display: none !important;
+}
+
+
+form#person_form .form-row{
+    border-bottom:none;
+}
+
+
+.form-row.field-Relation, .form-row.field-Max_guest_allowed {
+    width: 45%;
+    display: inline-block;
+}
+select#id_Relation,input#id_Max_guest_allowed{
+    width: 95%;
+}

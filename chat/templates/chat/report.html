@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Reporting</title>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono&subset=greek,cyrillic"/>
+        <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono&subset=greek,cyrillic"/> -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <link rel="stylesheet" href="/static/assets/css/custom.css"/>
         <script src="/static/assets/js/custom.js"></script>
@@ -40,7 +40,6 @@
                     <select name="report_type">
                         <option value="1">Show in web</option>
                         <option value="2">Show in PDF</option>
-                        <option value="3">Show in Excell</option>
                     </select>
                 </div> 
             </div>    
@@ -58,6 +57,7 @@
           <th>Entry</th>
           <th>Exit</th>
           <th>ID Checked</th>
+          <th>Issued By</th>
         </tr>
 
         
@@ -76,7 +76,8 @@
                         <td><a class="member" href="/admin/chat/person/{{ item.Customer.id}}/change/">{{ item.Customer.Name}}({{ item.Customer.MemberNumber}})</a></td>   
                         <td>{{guest.EntryTime.time}}</td>     
                         <td>{{guest.ExitTime.time}}</td>    
-                        <td>{{guest.IdChecked}}</td>              
+                        <td>{{guest.IdChecked}}</td>      
+                        <td>{{guest.created_id}}</td>                
                     </tr>
                 {% endfor %} 
             {% endfor %}       
@@ -158,6 +159,17 @@ a.member {
 </style>
 
 </div>
+
+{% if request.user.is_superuser %}
+    <div class="footer">
+        <div class="root_container">
+            <a href="/admin">Admin</a>
+            <a href="/report">Report</a>
+        </div>
+    </div>
+{% endif %}
+
+
 </body>
 </html>
 

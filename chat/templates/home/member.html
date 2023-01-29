@@ -22,7 +22,13 @@
         <div class="contin_main">
             <div class=" contin">
                 <div class="image_dv">
+
+                {% if person.Image %}
                     <img aria-colcount="img" src="{{person.Image.url}}" class="mem_img" />
+                {% else %}
+                    <img aria-colcount="img" src="/static/assets/images/bg-images/no_img.webp" class="mem_img" />
+                {% endif %}
+
                 </div>        
             </div>    
             <div class="contin" style="margin-top: 50px;">
@@ -46,10 +52,13 @@
                     <div class="info_lbl">Start Date:</div>
                     <div class="info">{{person.StartDate|date:'M d Y '}}</div>
                 </div>
-
                 <div class="infra">
-                    <div class="info_lbl">Number of Guest In:</div>
-                    <div class="info"><input min="0" minlength="1" maxlength="1" maxvalue="{{allow_guest_no}}" value="{{allow_guest_no}}" readonly name="numberofGust" id="numberofGust" type="number"/></div>
+                    <div class="info_lbl">Relation:</div>
+                    <div class="info">{{person.get_Relation_display }}</div>
+                </div>
+                <div class="infra">
+                    <div class="info_lbl">Number of Guest Allowed:</div>
+                    <div class="info nobg"><input min="0" minlength="1" maxlength="1" maxvalue="{{allow_guest_no}}" value="{{allow_guest_no}}" readonly name="numberofGust" id="numberofGust" type="number"/></div>
                 </div>
 
                 <div style="display: none;" class="infra">
@@ -66,7 +75,7 @@
                         <th>Date</th>
                         <th>Name</th>
                         <th>Card Number</th>
-                        <th>Exit Time</th>
+                        <!-- <th>Exit Time</th> -->
                         <th>ID Checked</th>
                     </tr>
                     <tbody id="existing">  
@@ -75,14 +84,12 @@
                                 <td>{{ ex.EntryTime|date:'M d Y H:i'  }}</td>
                                 <td>{{ ex.Name }}</td>
                                 <td class="card">{{ ex.CardNumber }}</td>
-                                <td>{{ ex.ExitTime|date:'M d Y H:i'  }}</td>
                                 <td>
                                     {% if ex.IdChecked %}
                                         <img class="check" src="/static/assets/images/bg-images/checkbox_checked.png"/>                                       
                                     {% else %}
                                         <img class="uncheck" src="/static/assets/images/bg-images/unchecked_checkbox.png"/>
                                     {% endif %}
-                                    
                                 </td>
                             </tr>
                         {% endfor %}
@@ -91,9 +98,7 @@
                 </table>
             </div>
             <button id="save_gust">Save</button>
-
         </div>
-
     </form>
     <div id="snackbar">Some text some message..</div>
 
@@ -112,6 +117,10 @@
         chatSocket.onmessage = function(e)
         {
             let data = JSON.parse(e.data);
+            if(data.OtherMessage)
+            {
+                Toast("snackbar",data.OtherMessage)
+            }
             if(data.UID)
             {
                 var isValid= true;
@@ -145,16 +154,22 @@
                 }
 
                 $("#numberofGust").val((currentnumber));            
-                html ='<tr> <td class="tddate">'+currentDate+'</td> <td class="tdname"><input id="text'+currentnumber+'" required class="center name" name="text'+currentnumber+'" type="text"/><td class="tdname"><input id="card'+currentnumber+'" required class="center card" value="'+data.UID+'" readonly name="card'+currentnumber+'" type="text"/></td><td></td>  <td class="tdcheck"><input id="check'+currentnumber+'" class="checkmark" required name="check'+currentnumber+'" type="checkbox"/></td> </tr>';
+                html ='<tr> <td class="tddate">'+currentDate+'</td> <td class="tdname"><input id="text'+currentnumber+'" required class="center name" name="text'+currentnumber+'" type="text"/><td class="tdname"><input id="card'+currentnumber+'" required class="center card" value="'+data.UID+'" readonly name="card'+currentnumber+'" type="text"/></td>  <td class="tdcheck"><input id="check'+currentnumber+'" class="checkmark" required name="check'+currentnumber+'" type="checkbox"/></td> </tr>';
 
                 $('tbody#tblgust').append(html);
-                console.log('uid:', data.UID)
             }
-            else if(data.OtherMessage)
-            {
-                Toast("snackbar",data.OtherMessage)
-            }
+
         }
+        chatSocket.onopen = function(e) {
+            console.log('Connected!');
+        };
+
+        chatSocket.onclose = function(e) {
+            // window.location.href = window.location.href;
+            ToastWithoutHide("snackbar","You Lost The connection. Please Refreash",'#ff0000')
+        };
+
+
 
     $("button#add_guest").click(function()
     {
@@ -166,7 +181,7 @@
             $(".Guest_details").show();
             for (let i = 1; i <= gustNumber; i++) 
             {
-                html +='<tr> <td class="tddate">'+currentDate+'</td> <td class="tdname"><input id="text'+i+'" class="center name" name="text'+i+'" type="text"/><td class="tdname"><input id="card'+i+'" class="center card" name="card'+i+'" type="text"/></td><td></td>  <td class="tdcheck"><input id="check'+i+'" name="check'+i+'" type="checkbox"/></td> </tr>';
+                html +='<tr> <td class="tddate">'+currentDate+'</td> <td class="tdname"><input id="text'+i+'" class="center name" name="text'+i+'" type="text"/><td class="tdname"><input id="card'+i+'" class="center card" name="card'+i+'" type="text"/></td> <td class="tdcheck"><input id="check'+i+'" name="check'+i+'" type="checkbox"/></td> </tr>';
             }
             $('tbody#tblgust').empty();
             $('tbody#tblgust').append(html);
@@ -226,8 +241,26 @@
     background-color: transparent;
 }
 
+
+
+
 </style>
 </div>
+
+{% if request.user.is_superuser %}
+    <div class="footer">
+        <div class="root_container">
+            <a href="/admin">Admin</a>
+            <a href="/report">Report</a>
+        </div>
+    </div>
+{% endif %}
+
+
 </body>
+
+
+
+
 </html>
 

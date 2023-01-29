@@ -33,6 +33,9 @@ span.entry {
 span.exit {
     color: red;
 }
+.footer {
+        position: fixed;
+    }
 </style>
 
 
@@ -55,6 +58,14 @@ span.exit {
                 Toast("snackbar",data.message)
             }     
         }
+        chatSocket.onopen = function(e) {
+            console.log('Connected!');
+        };
+
+        chatSocket.onclose = function(e) {
+            // window.location.href = window.location.href;
+            ToastWithoutHide("snackbar","You Lost The connection. Please Refreash",'#ff0000')
+        };
     });
 
 
@@ -70,6 +81,19 @@ span.exit {
 
 
 </div>
+
+{% if request.user.is_superuser %}
+    <div class="footer">
+        <div class="root_container">
+            <a href="/admin">Admin</a>
+            <a href="/report">Report</a>
+        </div>
+    </div>
+{% endif %}
+
+
+
+
 </body>
 </html>
 

@@ -123,7 +123,7 @@ class Member(LoginRequiredMixin,View):
         member_entrys= Entry.objects.filter(Customer=person,ExitTime=None).order_by('-EntryTime')
         
         existing_guest=None
-        allow_guest_no=settings.NUMBER_OF_ALLOW_GUEST
+        allow_guest_no=person.Max_guest_allowed
         if member_entrys:
             member_entrys=member_entrys[0]
             existing_guest= member_entrys.GuestEntrys.filter(ExitTime=None).all()
@@ -132,6 +132,9 @@ class Member(LoginRequiredMixin,View):
         return render(request, self.template_name,context={"person":person,'categorys':categorys,'existing_guest':existing_guest,'allow_guest_no':allow_guest_no})
 
     def post(self, request, *args, **kwargs):
+        if not request.user:
+            return redirect('/login/')
+
         numberofGust =int(request.POST.get('numberofGust', 0))
         person = Person.objects.get(id=self.kwargs['pk'])
         member_entrys= Entry.objects.filter(Customer=person,ExitTime=None).order_by('-EntryTime')
@@ -148,12 +151,12 @@ class Member(LoginRequiredMixin,View):
                         checked = True
                     else:
                         checked = False
-                    gEntry = GuestEntry(Entry=member_entrys,EntryTime=datetime.now(),CardNumber=CardNumber , IdChecked=checked,Name=name)
+                    gEntry = GuestEntry(Entry=member_entrys,EntryTime=datetime.now(),CardNumber=CardNumber , IdChecked=checked,Name=name,created_id=request.user)
                     gEntry.save()
                     member_entrys.GuestEntrys.add(gEntry)
                     member_entrys.save()
         else:
-            entry = Entry(Customer=person,EntryTime=datetime.now())          
+            entry = Entry(Customer=person,EntryTime=datetime.now(),created_id=request.user)          
             entry.save()
             if numberofGust>0:
                 for x in range(1,numberofGust+1):
@@ -165,7 +168,7 @@ class Member(LoginRequiredMixin,View):
                             checked = True
                         else:
                             checked = False
-                        gEntry = GuestEntry(Entry=entry,EntryTime=datetime.now(),CardNumber=cardNumber, IdChecked=checked,Name=name)
+                        gEntry = GuestEntry(Entry=entry,EntryTime=datetime.now(),CardNumber=cardNumber, IdChecked=checked,Name=name,created_id=request.user)
                         gEntry.save()
                         entry.GuestEntrys.add(gEntry)
                         entry.save()

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono&subset=greek,cyrillic"/>
+        <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono&subset=greek,cyrillic"/> -->
         <script type="text/javascript" src="/static/assets/plugins/jquery/js/jquery.min.js"></script>
         <link rel="stylesheet" href="/static/assets/css/custom.css"/>
         <script src="/static/assets/js/custom.js"></script>
@@ -19,9 +19,13 @@
     <img aria-colcount="img" src="/static/assets/images/bg-images/cardPunch.png" class="mem_img" />
     <h3 class="txt_center">Please Punch Your Card</h2>
 
+    
 <style>
     h3.txt_center {
         color: green;
+    }
+    .footer {
+        position: fixed;
     }
 </style>
 
@@ -36,22 +40,34 @@
         {
             let data = JSON.parse(e.data)
             console.log('Data:', data)
-
-
+                debugger;
+            if(data.OtherMessage)
+            {
+                Toast("snackbar",data.OtherMessage)
+            }
 
             if(data.Redirect)
             {
                 window.location.href = data.Redirect;
-            }
-            else if(data.OtherMessage)
-            {
-                Toast("snackbar",data.OtherMessage)
-            }
+            }             
             else if(data.message)
             {
                 Toast("snackbar",data.message)
             }     
         }
+
+        chatSocket.onopen = function(e) {
+            console.log('Connected!');
+        };
+
+        chatSocket.onclose = function(e) {
+            // window.location.href = window.location.href;
+            ToastWithoutHide("snackbar","You Lost The connection. Please Refreash",'#ff0000')
+        };
+
+
+
+
     });
 
 
@@ -63,6 +79,14 @@
 <div id="snackbar">Some text some message..</div>
 
 </div>
+{% if request.user.is_superuser %}
+    <div class="footer">
+        <div class="root_container">
+            <a href="/admin">Admin</a>
+            <a href="/report">Report</a>
+        </div>
+    </div>
+{% endif %}
 </body>
 </html>
 

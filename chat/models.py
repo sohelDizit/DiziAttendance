@@ -1,10 +1,11 @@
 from django.db import models
 from pickle import TRUE
-from django.db import models
 import os
 import uuid
 import random
 from datetime import datetime 
+from django.utils.html import mark_safe
+from django.conf import settings
 
 def user_directory_path(instance, filename):
     # Get Current Date
@@ -23,6 +24,22 @@ class Category(models.Model):
     def __str__(self):
         return self.Name 
 
+Relation = (
+    ('1','Own'),
+    ('2', 'Spouse'),
+    ('3', 'Husband'),
+    ('4', 'Son'),
+    ('5', 'Daughter'),
+    ('6', 'Brother'),
+    ('7', 'Sister'),
+    ('8', 'Father'),
+    ('9', 'Mother'),
+    ('10', 'Friend'),
+    ('11', 'Event'),
+    ('11', 'Other'),
+)
+
+
 
 class CardNumber(models.Model):
     CardNumber = models.CharField(max_length=200,blank=False, verbose_name = "Card Number")
@@ -39,8 +56,17 @@ class Person(models.Model):
     Categorys= models.ManyToManyField(Category, verbose_name = "Category's")
     Details = models.TextField(max_length=500,blank=True,verbose_name = "Details")
     StartDate =models.DateField(null=True,blank=False,verbose_name="Starting time")
+    Relation = models.CharField(max_length=6, choices=Relation, null=True,blank=False, default='1',verbose_name = "Relation")
+    Max_guest_allowed=models.IntegerField(blank=False,default=4, verbose_name = "Maximum Guest Allowed")
+
+
+
     def __str__(self):
         return self.Name +" ("+self.MemberNumber+")"
+    def img_preview(self): 
+        return mark_safe(f'<img src = "{self.Image.url}" width = "200"/>')
+
+
 
 class GuestEntry(models.Model):
     Name = models.CharField(max_length=200,blank=False, verbose_name = "Name")
@@ -49,7 +75,7 @@ class GuestEntry(models.Model):
     EntryTime=models.DateTimeField(blank=False,null=True, verbose_name = "Entry Time")
     IdChecked= models.BooleanField()
     ExitTime=models.DateTimeField(blank=True,null=True, verbose_name = "Exit Time")
-
+    created_id =models.ForeignKey(settings.AUTH_USER_MODEL, db_column="user", null=True, on_delete=models.SET_NULL)                                          
     def __str__(self):
         return self.Name    
 
@@ -58,7 +84,7 @@ class Entry(models.Model):
     EntryTime=models.DateTimeField(blank=False, verbose_name = "Entry Time")
     GuestEntrys= models.ManyToManyField(GuestEntry)
     ExitTime=models.DateTimeField(blank=True,null=True, verbose_name = "Exit Time")
-                                                                            
+    created_id =models.ForeignKey(settings.AUTH_USER_MODEL, db_column="user", null=True, on_delete=models.SET_NULL)                                          
     def __str__(self):
         return self.Customer.Name  
 

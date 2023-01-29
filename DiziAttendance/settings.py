@@ -129,6 +129,7 @@ USE_TZ = True
 
 NUMBER_OF_ALLOW_GUEST=4
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 

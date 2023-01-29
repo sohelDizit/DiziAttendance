@@ -15,16 +15,19 @@
           <th>Entry</th>
           <th>Exit</th>
           <th>ID Checked</th>
+          <th>Issued By</th>
+
         </tr>        
             {% for item in entrys %}       
                 {% for guest in item.GuestEntrys.all %}
                     <tr style="width:100%">
                         <td style="width:15%;">{{guest.EntryTime.date}}</td>
-                        <td style="width:25%;">{{ guest.Name}}</td>
+                        <td style="width:20%;">{{ guest.Name}}</td>
                         <td style="width:25%;"><a class="member" href="/admin/chat/person/{{ item.Customer.id}}/change/">{{ item.Customer.Name}}({{ item.Customer.MemberNumber}})</a></td>   
-                        <td style="width:10%;">{{guest.EntryTime.time}}</td>     
-                        <td style="width:10%;">{{guest.ExitTime.time}}</td>    
-                        <td style="width:15%;">{{guest.IdChecked}}</td>              
+                        <td style="width:15%;">{{guest.EntryTime.time}}</td>     
+                        <td style="width:15%;">{{guest.ExitTime.time}}</td>    
+                        <td style="width:10%;">{{guest.IdChecked}}</td>  
+                        <td style="width:15%;">{{guest.created_id}}</td>                            
                     </tr>
                 {% endfor %} 
             {% endfor %}       
@@ -42,6 +45,7 @@
         text-align: left;
         padding: 8px;
         font-size: 12px;
+        font-size: 10px;
     }
 
     tr:nth-child(even) {
